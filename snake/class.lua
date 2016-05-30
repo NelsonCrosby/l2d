@@ -41,19 +41,20 @@ function fc.class(proto, ...)
 
   for _, super in ipairs({...}) do
     for k, v in pairs(super) do
-      if proto[k] == nil then cls[k] = v end
+      if proto[k] == nil then proto[k] = v end
     end
   end
 
   return proto
 end
 
-if class_commons and common = nil then
+if class_commons and common == nil then
   common = { instance = fc.new }
   function common.class(_, ...) return fc.class(...) end
   return common
 else
-  local new = fc.new
-  function new.class(...) return fc.class(nil, {}, ...) end
+  local new = {}
+  setmetatable(new, { __call = function(_, ...) return fc.new(...) end })
+  function new.class(...) return fc.class({}, ...) end
   return new
 end
