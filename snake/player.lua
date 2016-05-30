@@ -4,11 +4,18 @@ local Entity = require 'entity'
 
 local Tail = new.class(Entity)
 
-function Tail:init(head, n)
-  Entity.init(self, head.x - head.w, head.y, head.w, head.h)
+function Tail:init(head, n, direction)
+  local x = head.x
+  local y = head.y
+  if direction == 'l' or direction == nil then x = head.x - head.w
+  elseif direction == 'r' then x = head.x + head.w
+  elseif direction == 'u' then y = head.y - head.h
+  elseif direction == 'd' then y = head.y + head.h
+  end
+  Entity.init(self, x, y, head.w, head.h)
   self.head = head
   if n > 0 then
-    self.tail = new(Tail, self, n - 1)
+    self.tail = new(Tail, self, n - 1, direction)
   end
 end
 
@@ -28,7 +35,13 @@ function Tail:insert()
   if self.tail then
     return self.tail:insert()
   else
-    self.tail = new(Tail, self, 0)
+    local direction
+    if self.head.x > self.x then direction = 'l'
+    elseif self.head.x < self.x then direction = 'r'
+    elseif self.head.y > self.y then direction = 'u'
+    elseif self.head.y < self.y then direction = 'd'
+    end
+    self.tail = new(Tail, self, 0, direction)
   end
 end
 
@@ -44,6 +57,7 @@ function Player:init(...)
 end
 
 function Player:update(dt)
+  if self.dx == 0 and self.dy == 0 then return end
   self._timer = self._timer + dt
   local invspeed = 1 / self.speed
   while self._timer > invspeed do

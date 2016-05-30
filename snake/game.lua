@@ -43,6 +43,10 @@ function Game:keypressed(k, s, r)
   elseif k == 'up' and self.player.dy == 0 then
     self.player.dx = 0
     self.player.dy = -10
+  elseif k == '=' then
+    self.player.tail:insert()
+  elseif k == 'escape' then
+    love.window.close()
   end
 end
 
