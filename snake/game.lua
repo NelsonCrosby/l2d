@@ -31,16 +31,16 @@ function Game:draw()
 end
 
 function Game:keypressed(k, s, r)
-  if k == 'right' then
+  if k == 'right' and self.player.dx == 0 then
     self.player.dx = 10
     self.player.dy = 0
-  elseif k == 'left' then
+  elseif k == 'left' and self.player.dx == 0 then
     self.player.dx = -10
     self.player.dy = 0
-  elseif k == 'down' then
+  elseif k == 'down' and self.player.dy == 0 then
     self.player.dx = 0
     self.player.dy = 10
-  elseif k == 'up' then
+  elseif k == 'up' and self.player.dy == 0 then
     self.player.dx = 0
     self.player.dy = -10
   end
