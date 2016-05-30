@@ -15,3 +15,7 @@ end
 function love.draw()
   game:draw()
 end
+
+function love.keypressed(k, s, r)
+  game:keypressed(k, s, r)
+end

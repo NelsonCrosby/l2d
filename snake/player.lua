@@ -8,7 +8,7 @@ function Player:init(...)
   Entity.init(self, ...)
   self.dx = 0
   self._timer = 0
-  self.speed = 1.5
+  self.speed = 1.0
 end
 
 function Player:update(dt)
