@@ -11,7 +11,7 @@ function Game:init()
     x1 = 0, x2 = winw,
     y1 = 0, y2 = winh
   }
-  self.player = new(Player, 10, 10, 10, 10)
+  self.player = new(Player, 400, 300, 10, 10)
 
   self.running = true
 end

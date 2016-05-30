@@ -24,6 +24,14 @@ function Tail:draw()
   love.graphics.rectangle('fill', self.x + 1, self.y + 1, self.w - 2, self.h - 2)
 end
 
+function Tail:insert()
+  if self.tail then
+    return self.tail:insert()
+  else
+    self.tail = new(Tail, self, 0)
+  end
+end
+
 
 local Player = new.class(Entity)
 
