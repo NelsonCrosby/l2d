@@ -3,9 +3,11 @@ local new = require 'class'
 
 local Entity = new.class()
 
-function Entity:init(x, y)
+function Entity:init(x, y, w, h)
   self.x = x
   self.y = y
+  self.w = w
+  self.h = h
   self.dx = 0
   self.dy = 0
 end
@@ -13,6 +15,11 @@ end
 function Entity:update(dt)
   self.x = self.x + (self.dx * dt)
   self.y = self.y + (self.dy * dt)
+end
+
+function Entity:inbounds(bounds)
+  return self.x > bounds.x1 and (self.x + self.w) < bounds.x2
+      and self.y > bounds.y1 and (self.y + self.h) < bounds.y2
 end
 
 

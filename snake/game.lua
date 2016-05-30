@@ -6,11 +6,24 @@ local Player = require 'player'
 local Game = new.class()
 
 function Game:init()
-  self.player = new(Player, 10, 10)
+  local winw, winh = love.window.getMode()
+  self.bounds = {
+    x1 = 0, x2 = winw,
+    y1 = 0, y2 = winh
+  }
+  self.player = new(Player, 10, 10, 10, 10)
+
+  self.running = true
 end
 
 function Game:update(dt)
-  self.player:update(dt)
+  if self.running then
+    self.player:update(dt)
+
+    if not self.player:inbounds(self.bounds) then
+      self.running = false
+    end
+  end
 end
 
 function Game:draw()

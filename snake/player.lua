@@ -8,7 +8,7 @@ function Player:init(...)
   Entity.init(self, ...)
   self.dx = 0
   self._timer = 0
-  self.speed = 1.0
+  self.speed = 2.5
 end
 
 function Player:update(dt)
@@ -22,7 +22,7 @@ end
 
 function Player:draw()
   love.graphics.setColor(255, 255, 255)
-  love.graphics.rectangle('fill', self.x, self.y, 10, 10)
+  love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
 end
 
 
