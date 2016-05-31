@@ -9,11 +9,10 @@ items.Item = new.class(Entity)
 
 items.Food = new.class(items.Item)
 
-function items.Food:init(x, y)
-  local w, h = love.window.getMode()
-  if x == nil then x = math.random(0, math.floor(w / 10)) end
-  if y == nil then y = math.random(0, math.floor(h / 10)) end
-  Entity.init(self, x * 10, y * 10, 10, 10)
+function items.Food:init(bounds)
+  local x = math.floor(math.random(bounds.x1, bounds.x2) / 10) * 10
+  local y = math.floor(math.random(bounds.y1, bounds.y2) / 10) * 10
+  Entity.init(self, x, y, 10, 10)
 end
 
 function items.Food:draw()

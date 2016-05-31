@@ -24,8 +24,8 @@ function Entity:collides(r)
 end
 
 function Entity:inbounds(bounds)
-  return self.x > bounds.x1 and (self.x + self.w) < bounds.x2
-      and self.y > bounds.y1 and (self.y + self.h) < bounds.y2
+  return self.x >= bounds.x1 and (self.x + self.w) <= bounds.x2
+      and self.y >= bounds.y1 and (self.y + self.h) <= bounds.y2
 end
 
 

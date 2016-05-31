@@ -8,10 +8,9 @@ local Game = new.class()
 
 function Game:init()
   local winw, winh = love.window.getMode()
-  self.bounds = {
-    x1 = 0, x2 = winw,
-    y1 = 0, y2 = winh
-  }
+  self.bounds = { x1 = 200, y1 = 150, w = 400, h = 300 }
+  self.bounds.x2 = self.bounds.x1 + self.bounds.w
+  self.bounds.y2 = self.bounds.y1 + self.bounds.h
   self.player = new(Player, 400, 300, 10, 10)
   self.food = nil
 
@@ -30,7 +29,7 @@ function Game:update(dt)
     end
 
     while self.food == nil do
-      self.food = new(items.Food)
+      self.food = new(items.Food, self.bounds)
       if self.player:collides(self.food) then
         self.food = nil
       end
@@ -47,6 +46,8 @@ end
 function Game:draw()
   self.player:draw()
   self.food:draw()
+  love.graphics.setColor(0, 255, 255)
+  love.graphics.rectangle('line', self.bounds.x1, self.bounds.y1, self.bounds.w, self.bounds.h)
 end
 
 function Game:keypressed(k, s, r)
@@ -62,8 +63,6 @@ function Game:keypressed(k, s, r)
   elseif k == 'up' and self.player.dy == 0 then
     self.player.dx = 0
     self.player.dy = -10
-  elseif k == '=' then
-    self.player.tail:insert()
   elseif k == 'escape' then
     love.event.quit()
   end
