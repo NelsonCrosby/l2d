@@ -14,6 +14,7 @@ function Game:init()
   self.player = new(Player, 400, 300, 10, 10)
   self.food = nil
 
+  self.score = 0
   self.timer = 0
   self.running = true
 end
@@ -24,6 +25,7 @@ function Game:update(dt)
 
     if self.food and self.player:collides(self.food) then
       self.food = nil
+      self.score = self.score + 1
       self.player.tail:insert()
       self.player.speed = self.player.speed + 0.1
     end
@@ -48,6 +50,9 @@ function Game:draw()
   self.food:draw()
   love.graphics.setColor(0, 255, 255)
   love.graphics.rectangle('line', self.bounds.x1, self.bounds.y1, self.bounds.w, self.bounds.h)
+
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.print('' .. self.score, 10, 10)
 end
 
 function Game:keypressed(k, s, r)
