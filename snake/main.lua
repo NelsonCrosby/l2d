@@ -5,6 +5,7 @@ local Game = require 'game'
 local game
 
 function love.load()
+  math.randomseed(os.time())
   game = new(Game)
 end
 

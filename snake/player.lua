@@ -80,6 +80,10 @@ function Player:draw()
   self.tail:draw()
 end
 
+function Player:collides(r)
+  return Entity.collides(self, r) or self.tail:collides(r)
+end
+
 function Player:bitTail()
   return self.tail:collides({ x = self.x + self.dx, y = self.y + self.dy })
 end
