@@ -17,6 +17,12 @@ function Entity:update(dt)
   self.y = self.y + (self.dy * dt)
 end
 
+function Entity:collides(r)
+  -- Not really an accurate collides function,
+  -- but sufficient for Snake which runs on a grid
+  return self.x == r.x and self.y == r.y
+end
+
 function Entity:inbounds(bounds)
   return self.x > bounds.x1 and (self.x + self.w) < bounds.x2
       and self.y > bounds.y1 and (self.y + self.h) < bounds.y2

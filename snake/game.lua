@@ -20,7 +20,9 @@ function Game:update(dt)
   if self.running then
     self.player:update(dt)
 
-    if not self.player:inbounds(self.bounds) then
+    if not self.player:inbounds(self.bounds)
+        or self.player:bitTail() then
+      self.player.dead = true
       self.running = false
     end
   end
@@ -46,7 +48,7 @@ function Game:keypressed(k, s, r)
   elseif k == '=' then
     self.player.tail:insert()
   elseif k == 'escape' then
-    love.window.close()
+    love.event.quit()
   end
 end
 

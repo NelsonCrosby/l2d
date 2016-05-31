@@ -20,15 +20,16 @@ function Tail:init(head, n, direction)
 end
 
 function Tail:update(dt)
+  -- By updating the tail first, we can just move
+  -- each segment to where its head is
   if self.tail then self.tail:update(dt) end
   self.x = self.head.x
   self.y = self.head.y
 end
 
 function Tail:draw()
-  if self.tail then self.tail:draw() end
-  love.graphics.setColor(255, 255, 255)
   love.graphics.rectangle('fill', self.x + 1, self.y + 1, self.w - 2, self.h - 2)
+  if self.tail then self.tail:draw() end
 end
 
 function Tail:insert()
@@ -43,6 +44,10 @@ function Tail:insert()
     end
     self.tail = new(Tail, self, 0, direction)
   end
+end
+
+function Tail:collides(r)
+  return Entity.collides(self, r) or (self.tail and self.tail:collides(r))
 end
 
 
@@ -68,9 +73,15 @@ function Player:update(dt)
 end
 
 function Player:draw()
-  love.graphics.setColor(255, 255, 255)
+  if self.dead then love.graphics.setColor(255, 0, 0)
+  else love.graphics.setColor(255, 255, 255)
+  end
   love.graphics.rectangle('fill', self.x + 1, self.y + 1, self.w - 2, self.h - 2)
   self.tail:draw()
+end
+
+function Player:bitTail()
+  return self.tail:collides({ x = self.x + self.dx, y = self.y + self.dy })
 end
 
 
