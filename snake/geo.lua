@@ -113,6 +113,10 @@ function mt.vec2.__div(u, v)
   end
 end
 
+function mt.vec2.__eq(u, v)
+  return u[1] == v[1] and u[2] == v[2]
+end
+
 function mt.vec2.__tostring(v)
   return 'vec2(' .. tostring(v[1]) .. ', ' .. tostring(v[2]) .. ')'
 end

@@ -62,5 +62,9 @@ function SnakeHead:insert()
   self.tail:insert()
 end
 
+function SnakeHead:reverse()
+  return self.tail.rect.pos - self.rect.pos
+end
+
 
 return SnakeHead

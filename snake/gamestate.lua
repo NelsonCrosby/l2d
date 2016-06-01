@@ -20,6 +20,7 @@ local GameState = new.class(State)
 function GameState:enter()
   self.cam = new(GameCamera)
   self.entities = { new(SnakeHead, 10, 10) }
+  self.moveevs = {}
 
   self.started = false
   self.score = 0
@@ -38,6 +39,10 @@ function GameState:update(dt)
   if self.started then
     self.timer = self.timer + dt
     if self.timer > (1 / (1 + self.score * 0.1)) then
+      if self.moveev then
+        self.entities[1].vel = self.moveev
+        self.moveev = nil
+      end
       self.timer = self.timer - 1
       for _, e in ipairs(self.entities) do
         e:update(1)
@@ -76,7 +81,10 @@ end
 
 function GameState:evmove(_, dr)
   if not self.started then self.started = true end
-  self.entities[1].vel = geo.vec2(dr)
+  local dx = geo.vec2(dr)
+  if not self.moveev and dx ~= self.entities[1]:reverse() then
+    self.moveev = dx
+  end
 end
 
 
