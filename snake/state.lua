@@ -67,7 +67,7 @@ function State:_evhandle(evtype, evdetail, ...)
         local f, args = fc[1], fc[2]
         if type(f) == 'string' then f = self[f] end
         if type(f) == 'function' then
-          f(self, ..., table.unpack(args))
+          f(self, ..., unpack(args))
           handled = true
         end
       end

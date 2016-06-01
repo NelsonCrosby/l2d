@@ -73,7 +73,7 @@ function GameState:evpop()
 end
 
 function GameState:evmove(_, dr)
-  self.entities[0].vel = geo.vec2(dr)
+  self.entities[1].vel = geo.vec2(dr)
 end
 
 
