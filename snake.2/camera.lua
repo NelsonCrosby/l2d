@@ -1,12 +1,13 @@
 local new = require 'class'
+local geo = require 'geo'
 
 
 local Camera = new.class()
 
 function Camera:init()
   self.transform = {
-    scale = { x = 0, y = 0 },
-    translate = { x = 0, y = 0 },
+    scale = geo.vec2(0, 0),
+    translate = geo.vec2(0, 0),
     rotate = 0
   }
 end
