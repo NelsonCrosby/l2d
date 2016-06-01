@@ -56,12 +56,5 @@ else
   local new = {}
   setmetatable(new, { __call = function(_, ...) return fc.new(...) end })
   function new.class(...) return fc.class({}, ...) end
-
-  new.nilop = {}
-  setmetatable(new.nilop, {
-    __call = function() end,
-    __index = function() return function() end end
-  })
-
   return new
 end

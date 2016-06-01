@@ -1,31 +1,40 @@
 local new = require 'class'
+local geo = require 'geo'
+
+local vec2_11 = geo.vec2(1, 1)
 
 
 local Entity = new.class()
 
 function Entity:init(x, y, w, h)
-  self.x = x
-  self.y = y
-  self.w = w
-  self.h = h
-  self.dx = 0
-  self.dy = 0
+  self.rect = geo.rect(x, y, w, h)
 end
 
-function Entity:update(dt)
-  self.x = self.x + (self.dx * dt)
-  self.y = self.y + (self.dy * dt)
+
+Entity.Stubs = new.class()
+
+function Entity.Stubs:update(dt)
 end
 
-function Entity:collides(r)
-  -- Not really an accurate collides function,
-  -- but sufficient for Snake which runs on a grid
-  return self.x == r.x and self.y == r.y
+function Entity.Stubs:draw()
 end
 
-function Entity:inbounds(bounds)
-  return self.x >= bounds.x1 and (self.x + self.w) <= bounds.x2
-      and self.y >= bounds.y1 and (self.y + self.h) <= bounds.y2
+
+Entity.Box = new.class()
+
+function Entity.Box:init(color, size)
+  if size == nil then size = geo.vec2(1, 1) end
+  self._b = { color, geo.vec2(size) }
+end
+
+function Entity.Box:draw()
+  local color = self._b[1]
+  local size = self._b[2]
+  local box = geo.rect(self.rect)
+  box.pos = box.pos + ((vec2_11 - size) / 2)
+  box.size = box.size * size
+  love.graphics.setColor(color[1], color[2], color[3])
+  love.graphics.rectangle('fill', box.pos[1], box.pos[2], box.size[1], box.size[2])
 end
 
 
