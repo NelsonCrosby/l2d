@@ -8,13 +8,15 @@ local Entity = new.class()
 
 function Entity:init(x, y, w, h)
   self.rect = geo.rect(x, y, w, h)
+  self.vel = geo.vec2(0, 0)
+end
+
+function Entity:update(dt)
+  self.rect.pos = self.rect.pos + (self.vel * dt)
 end
 
 
 Entity.Stubs = new.class()
-
-function Entity.Stubs:update(dt)
-end
 
 function Entity.Stubs:draw()
 end

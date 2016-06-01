@@ -1,7 +1,18 @@
 local geo = {}
 local mt = {}
 
-function geo.vec2(x, y)
+geo.LEFT = 1
+geo.RIGHT = 2
+geo.UP = 3
+geo.DOWN = 4
+
+geo.vec2 = {}
+setmetatable(geo.vec2, geo.vec2)
+function geo.vec2.__call(_, x, y)
+  if type(x) == 'number' and y == nil then
+    return geo.vec2(geo.vec2[x])
+  end
+
   local v
   if type(x) == 'table' then
     if x[1] and x[2] then
@@ -17,6 +28,15 @@ function geo.vec2(x, y)
   return setmetatable(v, mt.vec2)
 end
 
+geo.vec2[geo.LEFT] = geo.vec2(-1, 0)
+geo.vec2[geo.RIGHT] = geo.vec2(1, 0)
+geo.vec2[geo.UP] = geo.vec2(0, -1)
+geo.vec2[geo.DOWN] = geo.vec2(0, 1)
+geo.vec2.left = geo.vec2[geo.LEFT]
+geo.vec2.right = geo.vec2[geo.RIGHT]
+geo.vec2.up = geo.vec2[geo.UP]
+geo.vec2.down = geo.vec2[geo.DOWN]
+
 geo.rect = {}
 setmetatable(geo.rect, geo.rect)
 function geo.rect.__call(_, x, y, w, h)
@@ -27,15 +47,29 @@ function geo.rect.__call(_, x, y, w, h)
       r[1] = geo.vec2(x[1])
       r[2] = geo.vec2(x[2])
     else
-      r[1] = geo.vec2(x[1], x[2])
-      r[2] = geo.vec2(x[3], x[4])
+      r[1] = geo.vec2(x)
+      if x[3] then
+        r[2] = geo.vec2(x[3], x[4])
+      elseif type(y) == 'table' then
+        r[2] = geo.vec2(y)
+      else
+        r[2] = geo.vec2(y, w)
+      end
     end
   elseif type(x) == 'table' then
     r[1] = geo.vec2(x)
-    r[2] = geo.vec2(y, w)
+    if type(y) == 'table' then
+      r[2] = geo.vec2(y)
+    else
+      r[2] = geo.vec2(y, w)
+    end
   else
     r[1] = geo.vec2(x, y)
-    r[2] = geo.vec2(w, h)
+    if type(w) == 'table' then
+      r[2] = geo.vec2(w)
+    else
+      r[2] = geo.vec2(w, h)
+    end
   end
 
   return r
