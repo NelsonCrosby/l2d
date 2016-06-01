@@ -35,11 +35,13 @@ function GameState:enter()
 end
 
 function GameState:update(dt)
-  self.timer = self.timer + dt
-  if self.started and self.timer > (1 / (1 + self.score * 0.1)) then
-    self.timer = self.timer - 1
-    for _, e in ipairs(self.entities) do
-      e:update(1)
+  if self.started then
+    self.timer = self.timer + dt
+    if self.timer > (1 / (1 + self.score * 0.1)) then
+      self.timer = self.timer - 1
+      for _, e in ipairs(self.entities) do
+        e:update(1)
+      end
     end
   end
 
@@ -73,6 +75,7 @@ function GameState:evpop()
 end
 
 function GameState:evmove(_, dr)
+  if not self.started then self.started = true end
   self.entities[1].vel = geo.vec2(dr)
 end
 
