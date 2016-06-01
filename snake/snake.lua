@@ -21,11 +21,21 @@ function SnakeTail:update(dt)
   if self.tail then
     self.tail:update(dt)
   end
+  self.rect.pos = geo.vec2(self.head.rect.pos)
 end
 
 function SnakeTail:draw()
   Entity.Box.draw(self)
   if self.tail then self.tail:draw() end
+end
+
+function SnakeTail:insert()
+  if self.tail then
+    return self.tail:insert()
+  else
+    local dx = self.rect.pos - self.head.rect.pos
+    self.tail = new(SnakeTail, self, 1, dx)
+  end
 end
 
 
@@ -39,16 +49,17 @@ function SnakeHead:init(x, y)
 end
 
 function SnakeHead:update(dt)
-  while dt > 1 do
-    dt = dt - 1
-    self.tail:update(1)
-    Entity.update(self, 1)
-  end
+  self.tail:update(dt)
+  Entity.update(self, dt)
 end
 
 function SnakeHead:draw()
-  Entity.Box.draw(self)
   self.tail:draw()
+  Entity.Box.draw(self)
+end
+
+function SnakeHead:insert()
+  self.tail:insert()
 end
 
 

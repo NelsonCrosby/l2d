@@ -1,4 +1,5 @@
 local new = require 'class'
+local geo = require 'geo'
 local Camera = require 'camera'
 local State = require 'state'
 local Entity = require 'entity'
@@ -19,12 +20,27 @@ local GameState = new.class(State)
 function GameState:enter()
   self.cam = new(GameCamera)
   self.entities = { new(SnakeHead, 10, 10) }
+
+  self.started = false
+  self.score = 0
+  self.timer = 0
+
   self:bind('keypressed', 'home', 'evpop')
+  self:bind('keypressed', '=', function(self) self.entities[1]:insert() end)
+
+  self:bind('keypressed', 'left', 'evmove', geo.LEFT)
+  self:bind('keypressed', 'right', 'evmove', geo.RIGHT)
+  self:bind('keypressed', 'up', 'evmove', geo.UP)
+  self:bind('keypressed', 'down', 'evmove', geo.DOWN)
 end
 
 function GameState:update(dt)
-  for _, e in ipairs(self.entities) do
-    e:update(dt)
+  self.timer = self.timer + dt
+  if self.started and self.timer > (1 / (1 + self.score * 0.1)) then
+    self.timer = self.timer - 1
+    for _, e in ipairs(self.entities) do
+      e:update(1)
+    end
   end
 
   local camvel = { x = 0, y = 0 }
@@ -54,6 +70,10 @@ end
 
 function GameState:evpop()
   self.m:pop()
+end
+
+function GameState:evmove(_, dr)
+  self.entities[0].vel = geo.vec2(dr)
 end
 
 

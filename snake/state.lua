@@ -33,8 +33,8 @@ function State:keypressed(k, s, r)
   self:_evhandle('keypressed', k, r)
 end
 
-function State:bind(evtype, evdetail, f)
-  return self:_evbind(evtype, evdetail, f)
+function State:bind(evtype, evdetail, f, ...)
+  return self:_evbind(evtype, evdetail, { f, {...} })
 end
 
 function State:_evget(evtype, evdetail)
@@ -53,8 +53,8 @@ function State:_evget(evtype, evdetail)
   return ev
 end
 
-function State:_evbind(evtype, evdetail, f)
-  table.insert(self:_evget(evtype, evdetail), f)
+function State:_evbind(evtype, evdetail, fc)
+  table.insert(self:_evget(evtype, evdetail), fc)
 end
 
 function State:_evhandle(evtype, evdetail, ...)
@@ -63,10 +63,11 @@ function State:_evhandle(evtype, evdetail, ...)
 
   local function callall(ft, ...)
     if ft then
-      for _, f in ipairs(ft) do
+      for _, fc in ipairs(ft) do
+        local f, args = fc[1], fc[2]
         if type(f) == 'string' then f = self[f] end
         if type(f) == 'function' then
-          f(self, ...)
+          f(self, ..., table.unpack(args))
           handled = true
         end
       end
