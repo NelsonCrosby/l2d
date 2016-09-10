@@ -15,6 +15,10 @@ function Entity:update(dt)
   self.rect.pos = self.rect.pos + (self.vel * dt)
 end
 
+function Entity:collides(r)
+  return r:collides(self.rect)
+end
+
 
 Entity.Stubs = new.class()
 
@@ -27,6 +31,10 @@ Entity.Box = new.class()
 function Entity.Box:init(color, size)
   if size == nil then size = geo.vec2(1, 1) end
   self._b = { color, geo.vec2(size) }
+end
+
+function Entity.Box:setcolor(c)
+  self._b[1] = c
 end
 
 function Entity.Box:draw()

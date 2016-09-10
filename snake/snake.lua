@@ -8,8 +8,8 @@ local SnakeTail = new.class(Entity, Entity.Box, Entity.Stubs)
 function SnakeTail:init(head, tailsize, dr)
   local pos = geo.vec2(head.rect.pos)
   local dx = geo.vec2(dr)
-  Entity.init(self, pos + dx, 1, 1)
-  Entity.Box.init(self, { 255, 255, 255 }, { 0.8, 0.8 })
+  Entity.init(self, pos + dx, 0.9, 0.9)
+  Entity.Box.init(self, { 255, 255, 255 }, { 0.8888, 0.8888 })
 
   self.head = head
   if tailsize > 1 then
@@ -42,15 +42,27 @@ end
 local SnakeHead = new.class(Entity, Entity.Box, Entity.Stubs)
 
 function SnakeHead:init(x, y)
-  Entity.init(self, x, y, 1, 1)
-  Entity.Box.init(self, { 255, 255, 255 }, { 0.8, 0.8 })
+  Entity.init(self, x, y, 0.9, 0.9)
+  Entity.Box.init(self, { 255, 255, 255 }, { 0.8888, 0.8888 })
 
   self.tail = new(SnakeTail, self, 4, geo.LEFT)
+  self.dead = false
+end
+
+function SnakeHead:die()
+  self.dead = true
+  self:setcolor({ 255, 0, 0 })
 end
 
 function SnakeHead:update(dt)
-  self.tail:update(dt)
-  Entity.update(self, dt)
+  if not self.dead then
+    if self:eattail() then
+      self:die()
+      return
+    end
+    self.tail:update(dt)
+    Entity.update(self, dt)
+  end
 end
 
 function SnakeHead:draw()
@@ -66,5 +78,14 @@ function SnakeHead:reverse()
   return self.tail.rect.pos - self.rect.pos
 end
 
+function SnakeHead:eattail()
+  local nextpos = geo.rect(self.rect.pos + self.vel, self.rect.size)
+  local tail = self.tail
+  while tail do
+    if tail:collides(nextpos) then return true end
+    tail = tail.tail
+  end
+  return false
+end
 
 return SnakeHead

@@ -76,17 +76,20 @@ function geo.rect.__call(_, x, y, w, h)
 end
 
 
-mt.vec2 = {}
+mt.vec2 = {
+  xwords = { x = true, w = true, width = true },
+  ywords = { y = true, h = true, height = true }
+}
 
 function mt.vec2.__index(v, k)
-  if k == 'x' or k == 'w' or k == 'width' then return v[1]
-  elseif k == 'y' or k == 'h' or k == 'height' then return v[2]
+  if mt.vec2.xwords[k] then return v[1]
+  elseif mt.vec2.ywords[k] then return v[2]
   end
 end
 
 function mt.vec2.__newindex(v, k, n)
-  if k == 'x' or k == 'w' or k == 'width' then v[1] = n
-  elseif k == 'y' or k == 'h' or k == 'height' then v[2] = n
+  if mt.vec2.xwords[k] then v[1] = n
+  elseif mt.vec2.ywords[k] then v[2] = n
   else rawset(v, k, n)
   end
 end
@@ -122,24 +125,44 @@ function mt.vec2.__tostring(v)
 end
 
 
-mt.rect = {}
+mt.rect = {
+  xwords = { p = true, pos = true },
+  ywords = { s = true, size = true },
+  proto = {}
+}
 
 function mt.rect.__index(r, k)
-  if k == 'p' or k == 'pos' then return r[1]
-  elseif k == 's' or k == 'size' then return r[2]
-  elseif mt.rect[k] then return mt.rect[k]
+  if mt.rect.xwords[k] then return r[1]
+  elseif mt.rect.ywords[k] then return r[2]
+  else return mt.rect.proto[k]
   end
 end
 
 function mt.rect.__newindex(r, k, v)
-  if k == 'p' or k == 'pos' then r[1] = v
-  elseif k == 's' or k == 'size' then r[2] = v
+  if mt.rect.xwords[k] then r[1] = v
+  elseif mt.rect.ywords[k] then r[2] = v
   else rawset(r, k, v)
   end
 end
 
 function mt.rect.__tostring(r)
   return 'rect(' .. tostring(r[1]) .. ', ' .. tostring(r[2]) .. ')'
+end
+
+local function between(l, p)
+  return p >= l[1] and p <= l[2]
+end
+
+local function inside(r, p)
+  return between({ r.pos.x, r.pos.x + r.size.w }, p.x) and
+    between({ r.pos.y, r.pos.y + r.size.h }, p.y)
+end
+
+function mt.rect.proto.collides(r, s)
+  return inside(r, s.pos) or
+    inside(r, s.pos + s.size) or
+    inside(r, s.pos + geo.vec2(s.size.w, 0)) or
+    inside(r, s.pos + geo.vec2(0, s.size.h))
 end
 
 return geo
