@@ -1,6 +1,6 @@
 # L2D
 
-A collection of games written in [LOVE2D].
+A collection of games written in [LÖVE2D][love2d].
 
 See [the wiki] for [TODO] and such.
 
