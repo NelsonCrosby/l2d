@@ -6,7 +6,8 @@ local vec2_11 = geo.vec2(1, 1)
 
 local Entity = new.class()
 
-function Entity:init(x, y, w, h)
+function Entity:init(world, x, y, w, h)
+  self.world = world
   self.rect = geo.rect(x, y, w, h)
   self.vel = geo.vec2(0, 0)
 end

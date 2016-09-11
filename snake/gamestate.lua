@@ -1,9 +1,10 @@
 local new = require 'class'
 local geo = require 'geo'
 local Camera = require 'camera'
-local State = require 'state'
 local Entity = require 'entity'
 local SnakeHead = require 'snake'
+local State = require 'state'
+local World = require 'world'
 
 
 local GameCamera = new.class(Camera)
@@ -19,7 +20,8 @@ local GameState = new.class(State)
 
 function GameState:enter()
   self.cam = new(GameCamera)
-  self.entities = { new(SnakeHead, 10, 10) }
+  self.world = new(World.Random, self)
+  self.entities = { new(SnakeHead, self.world, 10, 10) }
   self.moveevs = {}
 
   self.started = false
@@ -69,10 +71,15 @@ end
 
 function GameState:draw()
   self.cam:with(function()
+    self.world:draw()
     for _, e in ipairs(self.entities) do
       e:draw()
     end
   end)
+end
+
+function GameState:point(n)
+  self.score = self.score + n
 end
 
 function GameState:evpop()

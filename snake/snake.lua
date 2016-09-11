@@ -8,7 +8,7 @@ local SnakeTail = new.class(Entity, Entity.Box, Entity.Stubs)
 function SnakeTail:init(head, tailsize, dr)
   local pos = geo.vec2(head.rect.pos)
   local dx = geo.vec2(dr)
-  Entity.init(self, pos + dx, 0.9, 0.9)
+  Entity.init(self, head.world, pos + dx, 0.9, 0.9)
   Entity.Box.init(self, { 255, 255, 255 }, { 0.8888, 0.8888 })
 
   self.head = head
@@ -41,8 +41,8 @@ end
 
 local SnakeHead = new.class(Entity, Entity.Box, Entity.Stubs)
 
-function SnakeHead:init(x, y)
-  Entity.init(self, x, y, 0.9, 0.9)
+function SnakeHead:init(world, x, y)
+  Entity.init(self, world, x, y, 0.9, 0.9)
   Entity.Box.init(self, { 255, 255, 255 }, { 0.8888, 0.8888 })
 
   self.tail = new(SnakeTail, self, 4, geo.LEFT)
@@ -54,7 +54,7 @@ function SnakeHead:die()
   self:setcolor({ 255, 0, 0 })
 end
 
-function SnakeHead:update(dt)
+function SnakeHead:update(dt, state)
   if not self.dead then
     if self:eattail() then
       self:die()
@@ -62,6 +62,17 @@ function SnakeHead:update(dt)
     end
     self.tail:update(dt)
     Entity.update(self, dt)
+    local food = self.world.food
+    local i = 1
+    while i <= #food do
+      local morsel = food[i]
+      if self:collides(morsel) then
+        self.world:eat(i)
+        self:insert()
+      else
+        i = i + 1
+      end
+    end
   end
 end
 
